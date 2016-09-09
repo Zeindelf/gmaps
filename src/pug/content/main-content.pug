@@ -4,4 +4,32 @@
             button.nearby Posição mais próxima
             select.select-position
                 option Localizar
+
+            #floating-panel
+                b Start:
+                select(id="start")
+                    option(value="penn station, new york, ny") Penn Station
+                    option(value="grand central station, new york, ny") Grand Central Station
+                    option(value="625 8th Avenue, New York, NY, 10018") Port Authority Bus Terminal
+                    option(value="staten island ferry terminal, new york, ny") Staten Island Ferry Terminal
+                    option(value="101 E 125th Street, New York, NY") Harlem - 125th St Station
+
+
+                b End:
+                select(id="end")
+                    option(value="260 Broadway New York NY 10007") City Hall
+                    option(value="W 49th St & 5th Ave, New York, NY 10020") Rockefeller Center
+                    option(value="moma, New York, NY") MOMA
+                    option(value="350 5th Ave, New York, NY, 10118") Empire State Building
+                    option(value="253 West 125th Street, New York, NY") Apollo Theater
+                    option(value="1 Wall St, New York, NY") Wall St
+
+                b Mode of Travel:
+                select(id="mode")
+                    option(value="DRIVING") Driving
+                    option(value="WALKING") Walking
+                    option(value="BICYCLING") Bicycling
+                    option(value="TRANSIT") Transit
+
+
             #map(style="width: 100%; height: 400px")
