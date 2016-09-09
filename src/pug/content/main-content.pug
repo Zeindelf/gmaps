@@ -1,19 +1,13 @@
 .main-content
     .main-content__container
         .main-content__content
-            .address
 
-            button.nearby Posição mais próxima
-
-            select(id="mode")
-                option Selecione o modo
-                option(value="DRIVING") Carro
-                option(value="WALKING") Andando
-                option(value="BICYCLING") Bicicleta
-                option(value="TRANSIT") Ônibus
-
-            select.select-position
-                option Localizar
+            //- select(id="mode")
+            //-     option Selecione o modo
+            //-     option(value="DRIVING") Carro
+            //-     option(value="WALKING") Andando
+            //-     option(value="BICYCLING") Bicicleta
+            //-     option(value="TRANSIT") Ônibus
 
             //- #floating-panel
             //-     b Start:
@@ -34,4 +28,11 @@
             //-         option(value="253 West 125th Street, New York, NY") Apollo Theater
             //-         option(value="1 Wall St, New York, NY") Wall St
 
-            #map(style="width: 100%; height: 400px")
+            .gmap__container
+                #map(style="width: 100%; height: 90vh")
+
+                .gmap__buttons
+                    button.gmap__buttons--nearby Posição mais próxima
+                    select.gmap__buttons--select-position
+                        option(value="localizate") Localizar
+                .gmap__address

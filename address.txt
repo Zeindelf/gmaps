@@ -1,7 +1,45 @@
 
-locations = [
-    { lat: -23.5625593, lng: -46.6918872, address: 'PRAÇA DOS OMAGUÁS, 34 - PINHEIROS - SÃO PAULO - SP' }
-    { lat: -23.5659064, lng: -46.6515637, address: 'AV. PAULISTA, 901 TÉRREO MEZ. E 1º SUBSOLO, - BELA VISTA - SÃO PAULO - SP' }
-    { lat: -23.6225865, lng: -46.6984903, address: 'AVENIDA ROQUE PETRONI JÚNIOR, 1089 - VILA GERTRUDES - SÃO PAULO - SP'}
-    { lat: -22.846867, lng: -47.06088, address: 'AV. GUILHERME CAMPOS, 500 - SANTA GENEBRA - CAMPINAS - SP' }
+let fixedLocations = [
+    {
+        id: 2,
+        lat: -23.5659064,
+        lng: -46.6515637,
+        address: 'AV. PAULISTA, 901 TÉRREO MEZ. E 1º SUBSOLO, - BELA VISTA - SÃO PAULO - SP',
+        city: 'Bela Vista'
+    },
+    {
+        id: 3,
+        lat: -23.6225865,
+        lng: -46.6984903,
+        address: 'AVENIDA ROQUE PETRONI JÚNIOR, 1089 - VILA GERTRUDES - SÃO PAULO - SP',
+        city: 'Vila Gertrudes'
+    },
+    {
+        id: 1,
+        lat: -23.5625593,
+        lng: -46.6918872,
+        address: 'PRAÇA DOS OMAGUÁS, 34 - PINHEIROS - SÃO PAULO - SP',
+        city: 'Pinheiros'
+    },
+    {
+        id: 4,
+        lat: -22.846867,
+        lng: -47.06088,
+        address: 'AV. GUILHERME CAMPOS, 500 - SANTA GENEBRA - CAMPINAS - SP',
+        city: 'Campinas'
+    },
+    {
+        id: 999,
+        lat: -23.5059353,
+        lng: -46.8759078,
+        address: 'RUA CAMPOS SALES',
+        city: 'Barueri'
+    },
+    {
+        id: 321564,
+        lat: -23.5289808,
+        lng: -46.8874073,
+        address: 'AV. BRIGADEIRO M. R. JORDÃO',
+        city: 'Barueri'
+    }
 ]

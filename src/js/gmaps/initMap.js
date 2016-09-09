@@ -3,8 +3,10 @@ import { find, minBy, findIndex } from 'lodash'
 
 export function initMap ({ location }) {
     let mapProp = {
+        // Coordenadas do Centro do Brasil
+        // center: new google.maps.LatLng(-14.992798, -51.647273),
         center: new google.maps.LatLng(location.lat, location.lng),
-        zoom: 11,
+        zoom: 4,
         scrollwheel: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
@@ -17,6 +19,7 @@ export function initMap ({ location }) {
     let marker = new google.maps.Marker({
         map: map,
         position: mapProp.center,
+        clickable: false,
         icon: 'http://maps.google.com/mapfiles/kml/pal3/icon63.png'
     })
     marker.addListener('click', () => {
@@ -35,45 +38,50 @@ export function initMap ({ location }) {
             id: 2,
             lat: -23.5659064,
             lng: -46.6515637,
-            address: 'AV. PAULISTA, 901 TÉRREO MEZ. E 1º SUBSOLO, - BELA VISTA - SÃO PAULO - SP',
+            address: 'Av. Pulista, 901 - Bela Vista - São Paulo - SP',
             city: 'Bela Vista'
         },
         {
             id: 3,
             lat: -23.6225865,
             lng: -46.6984903,
-            address: 'AVENIDA ROQUE PETRONI JÚNIOR, 1089 - VILA GERTRUDES - SÃO PAULO - SP',
+            address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
             city: 'Vila Gertrudes'
         },
-        {
-            id: 1,
-            lat: -23.5625593,
-            lng: -46.6918872,
-            address: 'PRAÇA DOS OMAGUÁS, 34 - PINHEIROS - SÃO PAULO - SP',
-            city: 'Pinheiros'
-        },
-        {
-            id: 4,
-            lat: -22.846867,
-            lng: -47.06088,
-            address: 'AV. GUILHERME CAMPOS, 500 - SANTA GENEBRA - CAMPINAS - SP',
-            city: 'Campinas'
-        },
-        {
-            id: 999,
-            lat: -23.5059353,
-            lng: -46.8759078,
-            address: 'RUA CAMPOS SALES',
-            city: 'Barueri'
-        },
-        {
-            id: 321564,
-            lat: -23.5289808,
-            lng: -46.8874073,
-            address: 'AV. BRIGADEIRO M. R. JORDÃO',
-            city: 'Barueri'
-        }
+        // {
+        //     id: 1,
+        //     lat: -23.5625593,
+        //     lng: -46.6918872,
+        //     address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
+        //     city: 'Pinheiros'
+        // },
+        // {
+        //     id: 4,
+        //     lat: -22.846867,
+        //     lng: -47.06088,
+        //     address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
+        //     city: 'Campinas'
+        // },
+        // {
+        //     id: 999,
+        //     lat: -23.5059353,
+        //     lng: -46.8759078,
+        //     address: 'Rua Campos Sales - Barueri',
+        //     city: 'Barueri'
+        // },
+        // {
+        //     id: 321564,
+        //     lat: -23.5289808,
+        //     lng: -46.8874073,
+        //     address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
+        //     city: 'Barueri'
+        // }
     ]
+
+    // Container de infos da distância
+    let $mapAddress = $('.gmap__address')
+    // Seleciona locais
+    let $selectPosition = $('.gmap__buttons--select-position')
 
     /**
      * Posições fixas
@@ -99,7 +107,6 @@ export function initMap ({ location }) {
         /**
          * Criar select de localização
          */
-        let $selectPosition = $('.select-position')
         $selectPosition.append(`
             <option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>
         `)
@@ -108,9 +115,11 @@ export function initMap ({ location }) {
     /**
      * Setar posição após o select
      */
-    let $select = $('select.select-position')
-    $select.change( () => {
-        let $selected = parseInt($('select.select-position option:selected').val())
+    $selectPosition.change( () => {
+        // Limpar div com distância do usuário caso exista
+        $mapAddress.empty().hide()
+
+        let $selected = parseInt($('.gmap__buttons--select-position option:selected').val())
         let currentLocation = find(fixedLocations, {'id': $selected})
         if ( $selected > -1 ) {
             let fixMarkerSelected = new google.maps.Marker({
@@ -138,30 +147,27 @@ export function initMap ({ location }) {
     /**
      * Localização mais próxima
      */
-    let $modeSelected = $('#mode option:selected').val('DRIVING')
-    let $nearby = $('.nearby')
+    let $nearby = $('.gmap__buttons--nearby')
     let $map = $('#map')
     $nearby.on('click', (ev) => {
         $map.fadeOut('fast', () => {
             map.setZoom(14)
             map.setCenter(marker.getPosition())
         }).fadeIn()
-    })
 
-    /**
-     * Distance
-     */
-    let geocoder = new google.maps.Geocoder;
-    let service = new google.maps.DistanceMatrixService;
-    let $mode = $('#mode')
 
-    $mode.change( () => {
-        let $modeSelected = $('#mode option:selected').val()
+        $selectPosition.val('localizate')
+
+        /**
+         * Get min distance
+         */
+        let geocoder = new google.maps.Geocoder;
+        let service = new google.maps.DistanceMatrixService;
 
         service.getDistanceMatrix({
             origins: [{ lat: location.lat, lng: location.lng }],
             destinations: fixedLocations,
-            travelMode: google.maps.TravelMode[$modeSelected],
+            travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.METRIC,
             avoidHighways: false,
             avoidTolls: false
@@ -176,16 +182,54 @@ export function initMap ({ location }) {
 
             let index = findIndex(el, (obj) => obj.distance.value == minDist )
 
-            let $closestAddress = $('.address')
-            $closestAddress.empty().append(`
-                <div style="display: none;">
-                    <b>lat</b>: ${fixedLocations[index].lat}
-                    <b>lng</b>: ${fixedLocations[index].lng}<br>
-                </div>
-                <h3>${fixedLocations[index].address}</h3>
-                <p><b>Distância</b>: ${formattedMinDist}</p>
-                <p><b>Tempo</b>: ${formattedMinTime}</p>
+            // Adiciona as informações
+            $mapAddress.empty().show().append(`
+                <p class="gmap__address--title">${fixedLocations[index].address}</h3>
+                <p class="gmap__address--dist"><span>Distância</span>: ${formattedMinDist}</p>
+                <p class="gmap__address--time"><span>Tempo aproximado</span>: ${formattedMinTime}</p>
             `)
+
+            // Mostra a rota inicial e final
+            let origin = `${location.lat},${location.lng}`
+            let destination = `${fixedLocations[index].address}`
+
+            getClosestPosition(map, origin, destination)
         })
     })
+
+// Direções para posição mais próxima
+function getClosestPosition (map, origin, destination) {
+        var markerArray = [];
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
+        var stepDisplay = new google.maps.InfoWindow;
+
+        calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination);
+     }
  }
+
+function calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination) {
+    // Remove todas as marcações
+    for (var i = 0; i < markerArray.length; i++) {
+        markerArray[i].setMap(null);
+    }
+
+    directionsService.route({
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING
+    }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
+}
+
+// function attachInstructionText(stepDisplay, marker, text, map) {
+//     google.maps.event.addListener(marker, 'click', function() {
+//         stepDisplay.setContent(text)
+//         stepDisplay.open(map, marker)
+//     });
+// }
