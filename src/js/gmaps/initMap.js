@@ -1,11 +1,12 @@
 
+import { getClosestPosition } from './getClosestPosition'
 import { find, minBy, findIndex } from 'lodash'
 
 export function initMap ({ location }) {
     let mapProp = {
         // Coordenadas do Centro do Brasil
-        // center: new google.maps.LatLng(-14.992798, -51.647273),
-        center: new google.maps.LatLng(location.lat, location.lng),
+        center: new google.maps.LatLng(-14.992798, -51.647273),
+        // center: new google.maps.LatLng(location.lat, location.lng),
         zoom: 4,
         scrollwheel: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -18,7 +19,7 @@ export function initMap ({ location }) {
      */
     let marker = new google.maps.Marker({
         map: map,
-        position: mapProp.center,
+        position: new google.maps.LatLng(location.lat, location.lng),
         clickable: false,
         icon: 'http://maps.google.com/mapfiles/kml/pal3/icon63.png'
     })
@@ -48,34 +49,34 @@ export function initMap ({ location }) {
             address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
             city: 'Vila Gertrudes'
         },
-        // {
-        //     id: 1,
-        //     lat: -23.5625593,
-        //     lng: -46.6918872,
-        //     address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
-        //     city: 'Pinheiros'
-        // },
-        // {
-        //     id: 4,
-        //     lat: -22.846867,
-        //     lng: -47.06088,
-        //     address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
-        //     city: 'Campinas'
-        // },
-        // {
-        //     id: 999,
-        //     lat: -23.5059353,
-        //     lng: -46.8759078,
-        //     address: 'Rua Campos Sales - Barueri',
-        //     city: 'Barueri'
-        // },
-        // {
-        //     id: 321564,
-        //     lat: -23.5289808,
-        //     lng: -46.8874073,
-        //     address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
-        //     city: 'Barueri'
-        // }
+        {
+            id: 1,
+            lat: -23.5625593,
+            lng: -46.6918872,
+            address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
+            city: 'Pinheiros'
+        },
+        {
+            id: 4,
+            lat: -22.846867,
+            lng: -47.06088,
+            address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
+            city: 'Campinas'
+        },
+        {
+            id: 999,
+            lat: -23.5059353,
+            lng: -46.8759078,
+            address: 'Rua Campos Sales - Barueri',
+            city: 'Barueri'
+        },
+        {
+            id: 321564,
+            lat: -23.5289808,
+            lng: -46.8874073,
+            address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
+            city: 'Barueri'
+        }
     ]
 
     // Container de infos da distância
@@ -149,11 +150,11 @@ export function initMap ({ location }) {
      */
     let $nearby = $('.gmap__buttons--nearby')
     let $map = $('#map')
-    $nearby.on('click', (ev) => {
-        $map.fadeOut('fast', () => {
-            map.setZoom(14)
-            map.setCenter(marker.getPosition())
-        }).fadeIn()
+    $nearby.on('click', () => {
+        // $map.fadeOut('fast', () => {
+            // map.setZoom(14)
+            // map.setCenter(marker.getPosition())
+        // }).fadeIn()
 
 
         $selectPosition.val('localizate')
@@ -196,40 +197,4 @@ export function initMap ({ location }) {
             getClosestPosition(map, origin, destination)
         })
     })
-
-// Direções para posição mais próxima
-function getClosestPosition (map, origin, destination) {
-        var markerArray = [];
-        var directionsService = new google.maps.DirectionsService;
-        var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-        var stepDisplay = new google.maps.InfoWindow;
-
-        calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination);
-     }
- }
-
-function calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination) {
-    // Remove todas as marcações
-    for (var i = 0; i < markerArray.length; i++) {
-        markerArray[i].setMap(null);
-    }
-
-    directionsService.route({
-        origin: origin,
-        destination: destination,
-        travelMode: google.maps.TravelMode.DRIVING
-    }, function(response, status) {
-        if (status === google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-        } else {
-            window.alert('Directions request failed due to ' + status);
-        }
-    });
 }
-
-// function attachInstructionText(stepDisplay, marker, text, map) {
-//     google.maps.event.addListener(marker, 'click', function() {
-//         stepDisplay.setContent(text)
-//         stepDisplay.open(map, marker)
-//     });
-// }
