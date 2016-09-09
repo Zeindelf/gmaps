@@ -4,7 +4,7 @@ import { find, minBy, findIndex } from 'lodash'
 export function initMap ({ location }) {
     let mapProp = {
         center: new google.maps.LatLng(location.lat, location.lng),
-        zoom: 4,
+        zoom: 11,
         scrollwheel: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
@@ -138,6 +138,7 @@ export function initMap ({ location }) {
     /**
      * Localização mais próxima
      */
+    let $modeSelected = $('#mode option:selected').val('DRIVING')
     let $nearby = $('.nearby')
     let $map = $('#map')
     $nearby.on('click', (ev) => {
@@ -150,33 +151,41 @@ export function initMap ({ location }) {
     /**
      * Distance
      */
-    var geocoder = new google.maps.Geocoder;
-    var service = new google.maps.DistanceMatrixService;
-    service.getDistanceMatrix({
-        origins: [{ lat: location.lat, lng: location.lng }],
-        destinations: [
-            { lat: fixedLocations[0].lat, lng: fixedLocations[0].lng },
-            { lat: fixedLocations[1].lat, lng: fixedLocations[1].lng },
-            { lat: fixedLocations[2].lat, lng: fixedLocations[2].lng },
-            { lat: fixedLocations[3].lat, lng: fixedLocations[3].lng },
-            { lat: fixedLocations[4].lat, lng: fixedLocations[4].lng },
-            { lat: fixedLocations[5].lat, lng: fixedLocations[5].lng }
-        ],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false
-    }, function(response, status) {
+    let geocoder = new google.maps.Geocoder;
+    let service = new google.maps.DistanceMatrixService;
+    let $mode = $('#mode')
 
-        let el = response.rows[0].elements
-        window.console.log('Elemento', el)
+    $mode.change( () => {
+        let $modeSelected = $('#mode option:selected').val()
 
-        let minDist = minBy(el, (obj) => obj.distance.value )
-        window.console.log('Distância mínima', minDist)
+        service.getDistanceMatrix({
+            origins: [{ lat: location.lat, lng: location.lng }],
+            destinations: fixedLocations,
+            travelMode: google.maps.TravelMode[$modeSelected],
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false
+        }, function(response, status) {
+            let el = response.rows[0].elements
+            let min = minBy(el, (obj) => obj.distance.value )
 
-        let index = findIndex(el, (obj) => obj.distance.value == minDist.distance.value )
-        window.console.log('Index', index)
+            let minDist = min.distance.value
+            let minTime = min.duration.value
+            let formattedMinDist = min.distance.text
+            let formattedMinTime = min.duration.text
 
-        window.console.log('Menor distância:', response.destinationAddresses[index])
-    });
+            let index = findIndex(el, (obj) => obj.distance.value == minDist )
+
+            let $closestAddress = $('.address')
+            $closestAddress.empty().append(`
+                <div style="display: none;">
+                    <b>lat</b>: ${fixedLocations[index].lat}
+                    <b>lng</b>: ${fixedLocations[index].lng}<br>
+                </div>
+                <h3>${fixedLocations[index].address}</h3>
+                <p><b>Distância</b>: ${formattedMinDist}</p>
+                <p><b>Tempo</b>: ${formattedMinTime}</p>
+            `)
+        })
+    })
  }
