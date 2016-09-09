@@ -6,7 +6,6 @@ export function initMap ({ location }) {
     let mapProp = {
         // Coordenadas do Centro do Brasil
         center: new google.maps.LatLng(-14.992798, -51.647273),
-        // center: new google.maps.LatLng(location.lat, location.lng),
         zoom: 4,
         scrollwheel: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -128,7 +127,7 @@ export function initMap ({ location }) {
                 position: new google.maps.LatLng(currentLocation.lat, currentLocation.lng),
                 icon: 'http://maps.google.com/mapfiles/kml/pal3/icon35.png'
             })
-            map.setZoom(14)
+            map.setZoom(16)
             map.setCenter(fixMarkerSelected.getPosition())
 
             fixMarkerSelected.addListener('click', () => {
@@ -151,11 +150,6 @@ export function initMap ({ location }) {
     let $nearby = $('.gmap__buttons--nearby')
     let $map = $('#map')
     $nearby.on('click', () => {
-        // $map.fadeOut('fast', () => {
-            // map.setZoom(14)
-            // map.setCenter(marker.getPosition())
-        // }).fadeIn()
-
 
         $selectPosition.val('localizate')
 

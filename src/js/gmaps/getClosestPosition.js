@@ -1,18 +1,18 @@
 
 export function getClosestPosition (map, origin, destination) {
-    var markerArray = [];
+    var rendererOptions = {
+        map: map,
+        suppressMarkers : true
+    }
     var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer({map: map});
-    var stepDisplay = new google.maps.InfoWindow;
+    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
 
-    calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination);
+    calculateAndDisplayRoute(directionsDisplay, directionsService, /*markerArray, stepDisplay,*/ map, origin, destination);
+
+    $('.gmap__buttons--select-position').change( () => directionsDisplay.setDirections({routes: []}) )
  }
 
-function calculateAndDisplayRoute(directionsDisplay, directionsService, markerArray, stepDisplay, map, origin, destination) {
-    // Remove todas as marcações
-    for (var i = 0; i < markerArray.length; i++) {
-        markerArray[i].setMap(null);
-    }
+function calculateAndDisplayRoute(directionsDisplay, directionsService, /*markerArray, stepDisplay,*/ map, origin, destination) {
 
     directionsService.route({
         origin: origin,
@@ -24,12 +24,5 @@ function calculateAndDisplayRoute(directionsDisplay, directionsService, markerAr
         } else {
             window.alert('Directions request failed due to ' + status);
         }
-    });
-}
-
-function attachInstructionText(stepDisplay, marker, text, map) {
-    google.maps.event.addListener(marker, 'click', function() {
-        stepDisplay.setContent(text)
-        stepDisplay.open(map, marker)
     });
 }
