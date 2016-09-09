@@ -58,6 +58,20 @@ export function initMap ({ location }) {
             lng: -47.06088,
             address: 'AV. GUILHERME CAMPOS, 500 - SANTA GENEBRA - CAMPINAS - SP',
             city: 'Campinas'
+        },
+        {
+            id: 999,
+            lat: -23.5059353,
+            lng: -46.8759078,
+            address: 'RUA CAMPOS SALES',
+            city: 'Barueri'
+        },
+        {
+            id: 321564,
+            lat: -23.5289808,
+            lng: -46.8874073,
+            address: 'AV. BRIGADEIRO M. R. JORDÃO',
+            city: 'Barueri'
         }
     ]
 
@@ -136,11 +150,6 @@ export function initMap ({ location }) {
     /**
      * Distance
      */
-    // var origin1 = {lat: 55.93, lng: -3.118};
-    // var origin2 = 'Greenwich, England';
-    // var destinationA = 'Stockholm, Sweden';
-    // var destinationB = {lat: 50.087, lng: 14.421};
-
     var geocoder = new google.maps.Geocoder;
     var service = new google.maps.DistanceMatrixService;
     service.getDistanceMatrix({
@@ -149,7 +158,9 @@ export function initMap ({ location }) {
             { lat: fixedLocations[0].lat, lng: fixedLocations[0].lng },
             { lat: fixedLocations[1].lat, lng: fixedLocations[1].lng },
             { lat: fixedLocations[2].lat, lng: fixedLocations[2].lng },
-            { lat: fixedLocations[3].lat, lng: fixedLocations[3].lng }
+            { lat: fixedLocations[3].lat, lng: fixedLocations[3].lng },
+            { lat: fixedLocations[4].lat, lng: fixedLocations[4].lng },
+            { lat: fixedLocations[5].lat, lng: fixedLocations[5].lng }
         ],
         travelMode: google.maps.TravelMode.DRIVING,
         unitSystem: google.maps.UnitSystem.METRIC,
