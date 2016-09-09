@@ -1,6 +1,5 @@
 
 import { initMap } from './initMap.js'
-import { iMap } from './iMap'
 
 export function getUserLocation () {
 
@@ -11,7 +10,4 @@ export function getUserLocation () {
         url: `${geoLocationUrl}${apiKeyGeoLocation}`,
         type: "post"
     }).done(initMap)
-    // }).done( (data) => {
-    //     iMap()
-    // })
  }

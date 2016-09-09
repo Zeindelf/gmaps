@@ -1,5 +1,6 @@
 
 import { getClosestPosition } from './getClosestPosition'
+import { geocodeAddress } from './geocodeAddress'
 import { find, minBy, findIndex } from 'lodash'
 
 export function initMap ({ location }) {
@@ -12,6 +13,9 @@ export function initMap ({ location }) {
     }
     let map = new google.maps.Map(document.getElementById("map"), mapProp)
     let infowindow = new google.maps.InfoWindow;
+
+    // Geocoder
+    var geocoder = new google.maps.Geocoder();
 
     /**
      * Localização do Usuário
@@ -48,34 +52,34 @@ export function initMap ({ location }) {
             address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
             city: 'Vila Gertrudes'
         },
-        {
-            id: 1,
-            lat: -23.5625593,
-            lng: -46.6918872,
-            address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
-            city: 'Pinheiros'
-        },
-        {
-            id: 4,
-            lat: -22.846867,
-            lng: -47.06088,
-            address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
-            city: 'Campinas'
-        },
-        {
-            id: 999,
-            lat: -23.5059353,
-            lng: -46.8759078,
-            address: 'Rua Campos Sales - Barueri',
-            city: 'Barueri'
-        },
-        {
-            id: 321564,
-            lat: -23.5289808,
-            lng: -46.8874073,
-            address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
-            city: 'Barueri'
-        }
+        // {
+        //     id: 1,
+        //     lat: -23.5625593,
+        //     lng: -46.6918872,
+        //     address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
+        //     city: 'Pinheiros'
+        // },
+        // {
+        //     id: 4,
+        //     lat: -22.846867,
+        //     lng: -47.06088,
+        //     address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
+        //     city: 'Campinas'
+        // },
+        // {
+        //     id: 999,
+        //     lat: -23.5059353,
+        //     lng: -46.8759078,
+        //     address: 'Rua Campos Sales - Barueri',
+        //     city: 'Barueri'
+        // },
+        // {
+        //     id: 321564,
+        //     lat: -23.5289808,
+        //     lng: -46.8874073,
+        //     address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
+        //     city: 'Barueri'
+        // }
     ]
 
     // Container de infos da distância
@@ -107,9 +111,7 @@ export function initMap ({ location }) {
         /**
          * Criar select de localização
          */
-        $selectPosition.append(`
-            <option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>
-        `)
+        $selectPosition.append(`<option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>`)
     }
 
     /**
@@ -150,7 +152,6 @@ export function initMap ({ location }) {
     let $nearby = $('.gmap__buttons--nearby')
     let $map = $('#map')
     $nearby.on('click', () => {
-
         $selectPosition.val('localizate')
 
         /**
@@ -167,28 +168,32 @@ export function initMap ({ location }) {
             avoidHighways: false,
             avoidTolls: false
         }, function(response, status) {
-            let el = response.rows[0].elements
-            let min = minBy(el, (obj) => obj.distance.value )
+            if ( status === 'OK' ) {
+                let el = response.rows[0].elements
+                let min = minBy(el, (obj) => obj.distance.value )
 
-            let minDist = min.distance.value
-            let minTime = min.duration.value
-            let formattedMinDist = min.distance.text
-            let formattedMinTime = min.duration.text
+                let minDist = min.distance.value
+                let minTime = min.duration.value
+                let formattedMinDist = min.distance.text
+                let formattedMinTime = min.duration.text
 
-            let index = findIndex(el, (obj) => obj.distance.value == minDist )
+                let index = findIndex(el, (obj) => obj.distance.value == minDist )
 
-            // Adiciona as informações
-            $mapAddress.empty().show().append(`
-                <p class="gmap__address--title">${fixedLocations[index].address}</h3>
-                <p class="gmap__address--dist"><span>Distância</span>: ${formattedMinDist}</p>
-                <p class="gmap__address--time"><span>Tempo aproximado</span>: ${formattedMinTime}</p>
-            `)
+                // Adiciona as informações
+                $mapAddress.empty().show().append(`
+                    <p class="gmap__address--title">${fixedLocations[index].address}</h3>
+                    <p class="gmap__address--dist"><span>Distância</span>: ${formattedMinDist}</p>
+                    <p class="gmap__address--time"><span>Tempo aproximado</span>: ${formattedMinTime}</p>
+                `)
 
-            // Mostra a rota inicial e final
-            let origin = `${location.lat},${location.lng}`
-            let destination = `${fixedLocations[index].address}`
+                // Mostra a rota inicial e final
+                let origin = `${location.lat},${location.lng}`
+                let destination = `${fixedLocations[index].address}`
 
-            getClosestPosition(map, origin, destination)
+                getClosestPosition(map, origin, destination)
+            } else {
+                window.alert('Não exitem rotas cadastradas')
+            }
         })
     })
 }
