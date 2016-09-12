@@ -2,6 +2,7 @@
 import { getClosestPosition } from './getClosestPosition'
 import { geocodeAddress } from './geocodeAddress'
 import { find, minBy, findIndex } from 'lodash'
+import { unique } from '../utils/unique'
 
 export function initMap ({ location }) {
     let mapProp = {
@@ -79,13 +80,29 @@ export function initMap ({ location }) {
     /**
      * Posições fixas
      */
-    for ( let i = 0; i < fixedLocations.length; i ++ ) {
+    let stateLocations = []
+
+    // Cria o array com os Estados de cada elemento (contém repetições)
+    for ( let i = 0; i < fixedLocations.length; i++ ) {
+        stateLocations.push(fixedLocations[i].state)
+    }
+
+    // Filtra o array para conter somente um Estado (não contém repetições)
+    let states = unique(stateLocations)
+    let stateGroup = {}
+
+    for ( let i = 0; i < states.length; i ++ ) {
         geocodeAddress(geocoder, map, fixedLocations[i], 'http://maps.google.com/mapfiles/kml/pal3/icon35.png', infowindow)
 
         /**
-         * Cria select de localização
+         * Cria o select de localização com OptGroup com base no Estado
          */
-        $selectPosition.append(`<option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>`)
+        stateGroup = $selectPosition.append(`<optgroup label="${states[i]}">`)
+        for ( let j = 0; j < fixedLocations.length; j++ ) {
+            if ( states[i] === fixedLocations[j].state ) {
+                stateGroup.append(`<option value="${fixedLocations[j].id}">${fixedLocations[j].city}</option>`)
+            }
+        }
     }
 
     /**
