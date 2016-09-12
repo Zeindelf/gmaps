@@ -1,8 +1,9 @@
 
 import { getClosestPosition } from './getClosestPosition'
 import { geocodeAddress } from './geocodeAddress'
-import { find, minBy, findIndex } from 'lodash'
 import { unique } from '../utils/unique'
+
+import { find, minBy, findIndex } from 'lodash'
 
 export function initMap ({ location }) {
     let mapProp = {
@@ -69,7 +70,43 @@ export function initMap ({ location }) {
             address: 'Rodovia BR-356, 3049 - BELVEDERE - Belo Horizonte - MG',
             city: 'Belo Horizonte',
             state: 'MG',
-        }
+        },
+        {
+            id: 6,
+            address: 'AV. DAS AMÉRICAS, 4666 - BARRA DA TIJUCA - RIO DE JANEIRO - RJ',
+            city: 'Barra da Tijuca',
+            state: 'RJ',
+        },
+        {
+            id: 7,
+            address: 'RUA PROF. PEDRO VIRIATO PARIGOT DE SOUZA, 600 - BARIGUI - CURITIBA - PR',
+            city: 'Curitiba',
+            state: 'PR',
+        },
+        {
+            id: 8,
+            address: 'SAI/SO ÁREA 6580 LUC 149P, - GUARÁ - BRASILIA - DF',
+            city: 'Brasília',
+            state: 'DF',
+        },
+        {
+            id: 9,
+            address: 'AV DIARIO DE NOTICIAS, 300 - CRISTAL - PORTO ALEGRE - RS',
+            city: 'Porto Alegre',
+            state: 'RS',
+        },
+        {
+            id: 10,
+            address: 'AV. CORONEL FERNANDO FERREIRA LEITE, 1540 - JD. CALIFORNIA - RIBEIRÃO PRETO - SP',
+            city: 'Ribeirão Preto',
+            state: 'SP',
+        },
+        {
+            id: 11,
+            address: 'AVE JAMEL CECILIO, 3300 - JARDIM GOIAS - GOIANIA - GO',
+            city: 'Goiânia',
+            state: 'GO',
+        },
     ]
 
     // Container de infos da distância

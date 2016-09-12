@@ -1,45 +1,68 @@
-
 let fixedLocations = [
     {
+        id: 1,
+        address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
+        city: 'Pinheiros',
+        state: 'SP',
+    },
+    {
         id: 2,
-        lat: -23.5659064,
-        lng: -46.6515637,
-        address: 'AV. PAULISTA, 901 TÉRREO MEZ. E 1º SUBSOLO, - BELA VISTA - SÃO PAULO - SP',
-        city: 'Bela Vista'
+        address: 'Av. Pulista, 901 - Bela Vista - São Paulo - SP',
+        city: 'Bela Vista',
+        state: 'SP',
     },
     {
         id: 3,
-        lat: -23.6225865,
-        lng: -46.6984903,
-        address: 'AVENIDA ROQUE PETRONI JÚNIOR, 1089 - VILA GERTRUDES - SÃO PAULO - SP',
-        city: 'Vila Gertrudes'
-    },
-    {
-        id: 1,
-        lat: -23.5625593,
-        lng: -46.6918872,
-        address: 'PRAÇA DOS OMAGUÁS, 34 - PINHEIROS - SÃO PAULO - SP',
-        city: 'Pinheiros'
+        address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
+        city: 'Vila Gertrudes',
+        state: 'SP',
     },
     {
         id: 4,
-        lat: -22.846867,
-        lng: -47.06088,
-        address: 'AV. GUILHERME CAMPOS, 500 - SANTA GENEBRA - CAMPINAS - SP',
-        city: 'Campinas'
+        address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
+        city: 'Campinas',
+        state: 'SP',
     },
     {
-        id: 999,
-        lat: -23.5059353,
-        lng: -46.8759078,
-        address: 'RUA CAMPOS SALES',
-        city: 'Barueri'
+        id: 5,
+        address: 'Rodovia BR-356, 3049 - BELVEDERE - Belo Horizonte - MG',
+        city: 'Belo Horizonte',
+        state: 'MG',
     },
     {
-        id: 321564,
-        lat: -23.5289808,
-        lng: -46.8874073,
-        address: 'AV. BRIGADEIRO M. R. JORDÃO',
-        city: 'Barueri'
+        id: 6,
+        address: 'AV. DAS AMÉRICAS, 4666 - BARRA DA TIJUCA - RIO DE JANEIRO - RJ',
+        city: 'Barra da Tijuca',
+        state: 'RJ',
+    },
+    {
+        id: 7,
+        address: 'RUA PROF. PEDRO VIRIATO PARIGOT DE SOUZA, 600 - BARIGUI - CURITIBA - PR',
+        city: 'Curitiba',
+        state: 'PR',
+    },
+    {
+        id: 8,
+        address: 'SAI/SO ÁREA 6580 LUC 149P, - GUARÁ - BRASILIA - DF',
+        city: 'Brasília',
+        state: 'DF',
+    },
+    {
+        id: 9,
+        address: 'AV DIARIO DE NOTICIAS, 300 - CRISTAL - PORTO ALEGRE - RS',
+        city: 'Porto Alegre',
+        state: 'RS',
+    },
+    {
+        id: 10,
+        address: 'AV. CORONEL FERNANDO FERREIRA LEITE, 1540 - JD. CALIFORNIA - RIBEIRÃO PRETO - SP',
+        city: 'Ribeirão Preto',
+        state: 'SP',
+    },
+    {
+        id: 11,
+        address: 'AVE JAMEL CECILIO, 3300 - JARDIM GOIAS - GOIANIA - GO',
+        city: 'Goiânia',
+        state: 'GO',
     }
 ]
