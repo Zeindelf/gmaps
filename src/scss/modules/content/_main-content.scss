@@ -41,7 +41,9 @@
         }
     }
 
-    // buttons
+    /**
+     * Botões de acesso a informações
+     */
     &__buttons {
         position: absolute;
         top: 20px;
@@ -54,6 +56,24 @@
         &--select-position {
             display: block;
             width: 100%;
+            cursor: pointer;
+            height: 30px;
+
+            optgroup {
+                font-size: 1.2em;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            option {
+                font-size: 1.1em;
+                font-weight: normal;
+                width: 100%;
+                display: block;
+                min-height: 1.2em;
+                padding-left: 10px !important;
+                cursor: pointer;
+            }
         }
 
         &--nearby {

@@ -17,7 +17,7 @@ export function geocodeAddress (geocoder, map, location, icon, infowindow) {
 
              fixMarkerSelected(map, infowindow, location, marker)
         } else {
-            // alert('Geocode was not successful for the following reason: ' + status);
+            alert('Geocode was not successful for the following reason: ' + status);
         }
     });
 }

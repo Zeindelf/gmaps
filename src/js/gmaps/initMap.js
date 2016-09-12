@@ -29,16 +29,6 @@ export function initMap ({ location }) {
         clickable: false,
         icon: 'http://maps.google.com/mapfiles/kml/pal3/icon63.png'
     })
-    marker.addListener('click', () => {
-        let userContent = `
-            <div style="padding: 4px 2px; color: red;">
-                <h3>User Location</h3>
-            </div>
-        `
-
-        infowindow.setContent(userContent)
-        infowindow.open(map, marker)
-    })
 
     let fixedLocations = [
         {
@@ -135,6 +125,7 @@ export function initMap ({ location }) {
          * Cria o select de localização com OptGroup com base no Estado
          */
         stateGroup = $selectPosition.append(`<optgroup label="${states[i]}">`)
+
         for ( let j = 0; j < fixedLocations.length; j++ ) {
             if ( states[i] === fixedLocations[j].state ) {
                 stateGroup.append(`<option value="${fixedLocations[j].id}">${fixedLocations[j].city}</option>`)
@@ -146,7 +137,7 @@ export function initMap ({ location }) {
      * Setar posição após o select
      */
     $selectPosition.change( () => {
-        // Limpar div com distância do usuário caso exista
+        // Limpar e esconder a div com a distância do usuário caso exista
         $mapAddress.empty().hide()
 
         let $selected = parseInt($('.gmap__buttons--select-position option:selected').val())
@@ -162,7 +153,9 @@ export function initMap ({ location }) {
      */
     let $nearby = $('.gmap__buttons--nearby')
     let $map = $('#map')
+
     $nearby.on('click', () => {
+
         $selectPosition.val('localizate')
 
         /**
