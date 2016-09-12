@@ -1,6 +1,7 @@
 
 import { getClosestPosition } from './getClosestPosition'
 import { geocodeAddress } from './geocodeAddress'
+import { locations } from './locations'
 import { unique } from '../utils/unique'
 
 import { find, minBy, findIndex } from 'lodash'
@@ -30,74 +31,8 @@ export function initMap ({ location }) {
         icon: 'http://maps.google.com/mapfiles/kml/pal3/icon63.png'
     })
 
-    let fixedLocations = [
-        {
-            id: 1,
-            address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
-            city: 'Pinheiros',
-            state: 'SP',
-        },
-        {
-            id: 2,
-            address: 'Av. Pulista, 901 - Bela Vista - São Paulo - SP',
-            city: 'Bela Vista',
-            state: 'SP',
-        },
-        {
-            id: 3,
-            address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
-            city: 'Vila Gertrudes',
-            state: 'SP',
-        },
-        {
-            id: 4,
-            address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
-            city: 'Campinas',
-            state: 'SP',
-        },
-        {
-            id: 5,
-            address: 'Rodovia BR-356, 3049 - BELVEDERE - Belo Horizonte - MG',
-            city: 'Belo Horizonte',
-            state: 'MG',
-        },
-        {
-            id: 6,
-            address: 'AV. DAS AMÉRICAS, 4666 - BARRA DA TIJUCA - RIO DE JANEIRO - RJ',
-            city: 'Barra da Tijuca',
-            state: 'RJ',
-        },
-        {
-            id: 7,
-            address: 'RUA PROF. PEDRO VIRIATO PARIGOT DE SOUZA, 600 - BARIGUI - CURITIBA - PR',
-            city: 'Curitiba',
-            state: 'PR',
-        },
-        {
-            id: 8,
-            address: 'SAI/SO ÁREA 6580 LUC 149P, - GUARÁ - BRASILIA - DF',
-            city: 'Brasília',
-            state: 'DF',
-        },
-        {
-            id: 9,
-            address: 'AV DIARIO DE NOTICIAS, 300 - CRISTAL - PORTO ALEGRE - RS',
-            city: 'Porto Alegre',
-            state: 'RS',
-        },
-        {
-            id: 10,
-            address: 'AV. CORONEL FERNANDO FERREIRA LEITE, 1540 - JD. CALIFORNIA - RIBEIRÃO PRETO - SP',
-            city: 'Ribeirão Preto',
-            state: 'SP',
-        },
-        {
-            id: 11,
-            address: 'AVE JAMEL CECILIO, 3300 - JARDIM GOIAS - GOIANIA - GO',
-            city: 'Goiânia',
-            state: 'GO',
-        },
-    ]
+    // Endereços
+    let fixedLocations = locations()
 
     // Container de infos da distância
     let $mapAddress = $('.gmap__address')
@@ -116,21 +51,23 @@ export function initMap ({ location }) {
 
     // Filtra o array para conter somente um Estado (não contém repetições)
     let states = unique(stateLocations)
-    let stateGroup = {}
+    let stateGroup = ''
 
     for ( let i = 0; i < states.length; i ++ ) {
+        $selectPosition.append(`<optgroup label="${states[i]}" />`)
+    }
+
+    let $stateOptGroup = $('.gmap__buttons--select-position optgroup')
+    let $stateOptGroupVal = ''
+    for ( let i = 0; i < fixedLocations.length; i++ ) {
         geocodeAddress(geocoder, map, fixedLocations[i], 'http://maps.google.com/mapfiles/kml/pal3/icon35.png', infowindow)
 
-        /**
-         * Cria o select de localização com OptGroup com base no Estado
-         */
-        stateGroup = $selectPosition.append(`<optgroup label="${states[i]}">`)
-
-        for ( let j = 0; j < fixedLocations.length; j++ ) {
-            if ( states[i] === fixedLocations[j].state ) {
-                stateGroup.append(`<option value="${fixedLocations[j].id}">${fixedLocations[j].city}</option>`)
+        $stateOptGroup.each( (index, val) => {
+            $stateOptGroupVal = $(val).attr('label')
+            if ( $stateOptGroupVal == fixedLocations[i].state ) {
+                $(`.gmap__buttons--select-position optgroup[label="${$stateOptGroupVal}"]`).append(`<option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>`)
             }
-        }
+        })
     }
 
     /**
