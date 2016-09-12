@@ -9,6 +9,7 @@ export function initMap ({ location }) {
         center: new google.maps.LatLng(-14.992798, -51.647273),
         zoom: 4,
         scrollwheel: true,
+        disableDefaultUI: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     let map = new google.maps.Map(document.getElementById("map"), mapProp)
@@ -39,47 +40,35 @@ export function initMap ({ location }) {
 
     let fixedLocations = [
         {
+            id: 1,
+            address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
+            city: 'Pinheiros',
+            state: 'SP',
+        },
+        {
             id: 2,
-            lat: -23.5659064,
-            lng: -46.6515637,
             address: 'Av. Pulista, 901 - Bela Vista - São Paulo - SP',
-            city: 'Bela Vista'
+            city: 'Bela Vista',
+            state: 'SP',
         },
         {
             id: 3,
-            lat: -23.6225865,
-            lng: -46.6984903,
             address: 'Av. Roque Petroni Júnior, 1089 - Vila Gertrudes - São Paulo - SP',
-            city: 'Vila Gertrudes'
+            city: 'Vila Gertrudes',
+            state: 'SP',
         },
-        // {
-        //     id: 1,
-        //     lat: -23.5625593,
-        //     lng: -46.6918872,
-        //     address: 'Praça Dos Omaguas, 34 - Pinheiros - São Paulo - SP',
-        //     city: 'Pinheiros'
-        // },
-        // {
-        //     id: 4,
-        //     lat: -22.846867,
-        //     lng: -47.06088,
-        //     address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
-        //     city: 'Campinas'
-        // },
-        // {
-        //     id: 999,
-        //     lat: -23.5059353,
-        //     lng: -46.8759078,
-        //     address: 'Rua Campos Sales - Barueri',
-        //     city: 'Barueri'
-        // },
-        // {
-        //     id: 321564,
-        //     lat: -23.5289808,
-        //     lng: -46.8874073,
-        //     address: 'Av. Brigadeiro M. R. Jordão - Jardim Silveira - Barueri',
-        //     city: 'Barueri'
-        // }
+        {
+            id: 4,
+            address: 'Av. Guillerme Campos, 500 - Santa Genebra - Campinas - SP',
+            city: 'Campinas',
+            state: 'SP',
+        },
+        {
+            id: 5,
+            address: 'Rodovia BR-356, 3049 - BELVEDERE - Belo Horizonte - MG',
+            city: 'Belo Horizonte',
+            state: 'MG',
+        }
     ]
 
     // Container de infos da distância
@@ -91,25 +80,10 @@ export function initMap ({ location }) {
      * Posições fixas
      */
     for ( let i = 0; i < fixedLocations.length; i ++ ) {
-        let fixMarker = new google.maps.Marker({
-            map: map,
-            position: new google.maps.LatLng(fixedLocations[i].lat, fixedLocations[i].lng),
-            icon: 'http://maps.google.com/mapfiles/kml/pal3/icon35.png'
-        })
-        fixMarker.addListener('click', () => {
-            let fixedContent = `
-                <div style="padding: 4px 2px; color: blue;">
-                    <h3>Fixed Location</h3>
-                    <p>${fixedLocations[i].address}</p>
-                </div>
-            `
-
-            infowindow.setContent(fixedContent)
-            infowindow.open(map, fixMarker)
-        })
+        geocodeAddress(geocoder, map, fixedLocations[i], 'http://maps.google.com/mapfiles/kml/pal3/icon35.png', infowindow)
 
         /**
-         * Criar select de localização
+         * Cria select de localização
          */
         $selectPosition.append(`<option value="${fixedLocations[i].id}">${fixedLocations[i].city}</option>`)
     }
@@ -124,25 +98,8 @@ export function initMap ({ location }) {
         let $selected = parseInt($('.gmap__buttons--select-position option:selected').val())
         let currentLocation = find(fixedLocations, {'id': $selected})
         if ( $selected > -1 ) {
-            let fixMarkerSelected = new google.maps.Marker({
-                map: map,
-                position: new google.maps.LatLng(currentLocation.lat, currentLocation.lng),
-                icon: 'http://maps.google.com/mapfiles/kml/pal3/icon35.png'
-            })
+            let geocodeMarker = geocodeAddress(geocoder, map, currentLocation, 'http://maps.google.com/mapfiles/kml/pal3/icon35.png', infowindow)
             map.setZoom(16)
-            map.setCenter(fixMarkerSelected.getPosition())
-
-            fixMarkerSelected.addListener('click', () => {
-                let fixedContent = `
-                    <div style="padding: 4px 2px; color: blue;">
-                        <h3>Fixed Location</h3>
-                        <p>${currentLocation.address}</p>
-                    </div>
-                `
-
-                infowindow.setContent(fixedContent)
-                infowindow.open(map, fixMarkerSelected)
-            })
         }
     })
 
@@ -157,12 +114,16 @@ export function initMap ({ location }) {
         /**
          * Get min distance
          */
-        let geocoder = new google.maps.Geocoder;
         let service = new google.maps.DistanceMatrixService;
+        let destinations = []
+
+        fixedLocations.forEach(function(val, index) {
+            destinations.push(val.address)
+        });
 
         service.getDistanceMatrix({
             origins: [{ lat: location.lat, lng: location.lng }],
-            destinations: fixedLocations,
+            destinations: destinations,
             travelMode: google.maps.TravelMode.DRIVING,
             unitSystem: google.maps.UnitSystem.METRIC,
             avoidHighways: false,

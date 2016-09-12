@@ -1,5 +1,5 @@
 
-export function fixMarkerSelected (infowindow, location) {
+export function fixMarkerSelected (map, infowindow, location, marker) {
     marker.addListener('click', () => {
         let content = `
             <div style="padding: 4px 2px; color: blue;">
@@ -9,6 +9,6 @@ export function fixMarkerSelected (infowindow, location) {
         `
 
         infowindow.setContent(content)
-        infowindow.open(map, fixMarkerSelected)
+        infowindow.open(map, marker)
     })
 }
